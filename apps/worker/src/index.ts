@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { startCaptureServer } from "./capture-server";
 import { getDuePosts, updatePostStatus, getAccount, saveAnalyticsSnapshot } from "@prism/db";
 import { decrypt } from "@prism/crypto";
 import { isSafeHour, humanDelay, MIN_GAP_MS } from "./lib/humanize";
@@ -92,6 +93,7 @@ async function tick() {
 
 async function main() {
   console.log(`[worker] PRISM worker started — polling every ${POLL_INTERVAL / 1000}s`);
+  startCaptureServer(3002);
 
   await tick();
   setInterval(tick, POLL_INTERVAL);
