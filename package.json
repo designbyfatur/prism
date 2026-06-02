@@ -1,0 +1,17 @@
+{
+  "name": "prism",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "bun run --cwd apps/web dev",
+    "dev:worker": "bun run --cwd apps/worker dev",
+    "build": "bun run --cwd apps/web build"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}
