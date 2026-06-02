@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Sidebar } from "@/components/layout/sidebar";
 import { KanbanView } from "@/components/posts/kanban-view";
+import { CreatePostModal } from "@/components/posts/create-post-modal";
 import { Plus, CalendarDays, Columns3, List } from "lucide-react";
 import { clsx } from "clsx";
 
@@ -22,6 +23,7 @@ const VIEWS: { id: View; label: string; icon: React.ComponentType<any> }[] = [
 
 export default function PostsPage() {
   const [view, setView] = useState<View>("calendar");
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="flex min-h-screen">
@@ -33,7 +35,10 @@ export default function PostsPage() {
             <h1 className="text-2xl font-semibold">Posts</h1>
             <p className="text-gray-400 text-sm mt-1">Schedule and manage your content</p>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-prism-500 hover:bg-prism-600 text-sm font-medium transition-colors">
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-prism-500 hover:bg-prism-600 text-sm font-medium transition-colors"
+          >
             <Plus size={16} />
             New Post
           </button>
@@ -67,6 +72,13 @@ export default function PostsPage() {
           </div>
         )}
       </main>
+
+      {showModal && (
+        <CreatePostModal
+          onClose={() => setShowModal(false)}
+          onCreated={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 }
