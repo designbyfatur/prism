@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { startCaptureServer } from "./capture-server";
 import { getDuePosts, updatePostStatus, getAccount, saveAnalyticsSnapshot } from "@prism/db";
 import { decrypt } from "@prism/crypto";
