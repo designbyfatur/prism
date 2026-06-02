@@ -92,7 +92,13 @@ async function tick() {
 
 async function main() {
   console.log(`[worker] PRISM worker started — polling every ${POLL_INTERVAL / 1000}s`);
-  startCaptureServer(3002);
+
+  // Capture server only runs locally (needs visible browser for user interaction)
+  if (process.env.ENABLE_CAPTURE_SERVER !== "false") {
+    startCaptureServer(3002);
+  } else {
+    console.log("[worker] Capture server disabled (cloud mode)");
+  }
 
   await tick();
   setInterval(tick, POLL_INTERVAL);
