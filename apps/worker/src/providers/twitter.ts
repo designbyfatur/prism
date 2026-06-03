@@ -11,9 +11,20 @@ export async function captureSession(): Promise<SessionState> {
   const page = await context.newPage();
 
   await page.goto("https://x.com/i/flow/login");
-  console.log("[twitter] Waiting for user to login...");
+  console.log("[twitter] Waiting for user to login (including 2FA/verification)...");
 
-  await page.waitForURL((url) => url.includes("x.com/home"), { timeout: 120_000 });
+  // Wait until user exits the login flow — handles 2FA, email verification, etc.
+  await page.waitForURL(
+    (url) => {
+      const u = url.toString();
+      return u.includes("x.com") && !u.includes("/i/flow/");
+    },
+    { timeout: 240_000 }
+  );
+
+  // Navigate to home to ensure stable authenticated state before capturing
+  await page.goto("https://x.com/home");
+  await page.waitForLoadState("networkidle", { timeout: 30_000 });
   await humanDelay(2000, 3000);
 
   const state = await context.storageState();
@@ -38,11 +49,7 @@ export async function post(options: {
     await humanDelay(800, 1500);
 
     if (options.mediaPath) {
-      const [fileChooser] = await Promise.all([
-        page.waitForFileChooser(),
-        page.click("input[data-testid='fileInput']"),
-      ]);
-      await fileChooser.setFiles(options.mediaPath);
+      await page.locator("input[data-testid='fileInput']").setInputFiles(options.mediaPath);
       await humanDelay(2000, 4000);
     }
 

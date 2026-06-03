@@ -51,8 +51,9 @@ export async function getAccountsByUserId(userId: string): Promise<SocialAccount
 
 export async function saveAccount(data: Omit<SocialAccount, "id">): Promise<string> {
   const db = getDb();
-  const ref = await db.collection("social_accounts").add(data);
-  return ref.id;
+  const docId = `${data.userId}_${data.platform}`;
+  await db.collection("social_accounts").doc(docId).set(data);
+  return docId;
 }
 
 export async function updateAccountSession(
